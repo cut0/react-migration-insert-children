@@ -26,4 +26,5 @@ It can be executed via commands from the shell.
 - Insert Children
 - Codemod
 - Migration
+- ts-morph
 - Deno
