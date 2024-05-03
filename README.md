@@ -210,6 +210,7 @@ export type Props = Hoge;
 
 export const Component: React.FC<Props> = ({ children }) => <div />;
 ```
+### Case 6
 
 ```tsx
 type Hoge = {
