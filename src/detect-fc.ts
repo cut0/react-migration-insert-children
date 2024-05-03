@@ -16,7 +16,7 @@ export const isFcDeclartion = (declaration: VariableDeclaration): boolean => {
  * - Detect if the children is refered.
  */
 export const isChildrenRefered = (
-  declaration: VariableDeclaration
+  declaration: VariableDeclaration,
 ): boolean => {
   const parameter = declaration
     .getInitializer()

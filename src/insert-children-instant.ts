@@ -4,7 +4,7 @@ import { isChildrenRefered, isFcDeclartion } from "./detect-fc.ts";
 
 const insertComment = (
   sourceFile: SourceFile,
-  declaration: VariableDeclaration
+  declaration: VariableDeclaration,
 ) => {
   const componentName = declaration.getSymbol()?.getEscapedName() ?? "";
 
@@ -14,7 +14,7 @@ const insertComment = (
 
   sourceFile.insertText(
     startLineNumber,
-    "// Automatically added by react-migration-insert-children\n"
+    "// Automatically added by react-migration-insert-children\n",
   );
 };
 
@@ -31,10 +31,9 @@ export const convert = (sourceFile: SourceFile) => {
      * - from: React.FC<Props & { hoge:fuga }>
      * - to: React.FC<Props & { hoge:fuga } & { children?: React.ReactNode }>
      */
-    const isIntersection =
-      declaration
-        .getTypeNodeOrThrow()
-        .getFirstChildByKind(SyntaxKind.IntersectionType) != null;
+    const isIntersection = declaration
+      .getTypeNodeOrThrow()
+      .getFirstChildByKind(SyntaxKind.IntersectionType) != null;
 
     if (isIntersection) {
       const typeNode = declaration.getTypeNodeOrThrow();
@@ -44,7 +43,8 @@ export const convert = (sourceFile: SourceFile) => {
         const intersectionType = declaration
           .getTypeNodeOrThrow()
           .getFirstChildByKindOrThrow(SyntaxKind.IntersectionType);
-        const newInnerType = `${intersectionType.getText()} & { children?: React.ReactNode }`;
+        const newInnerType =
+          `${intersectionType.getText()} & { children?: React.ReactNode }`;
         const newTypeAnnotation = `${genericType.getText()}<${newInnerType}>`;
 
         declaration.setType(newTypeAnnotation);
@@ -60,17 +60,17 @@ export const convert = (sourceFile: SourceFile) => {
      * - from: React.FC<Props>
      * - to: React.FC<Props & { children?: React.ReactNode }>
      */
-    const isTypeReference =
-      declaration
-        .getTypeNodeOrThrow()
-        .getFirstChildByKind(SyntaxKind.TypeReference) != null;
+    const isTypeReference = declaration
+      .getTypeNodeOrThrow()
+      .getFirstChildByKind(SyntaxKind.TypeReference) != null;
 
     if (isTypeReference) {
       const typeNode = declaration.getTypeNodeOrThrow();
       const [genericType, , innerType] = typeNode.getChildren();
 
       if (genericType != null && innerType != null) {
-        const newInnerType = `${innerType.getText()} & { children?: React.ReactNode }`;
+        const newInnerType =
+          `${innerType.getText()} & { children?: React.ReactNode }`;
         const newTypeAnnotation = `${genericType.getText()}<${newInnerType}>`;
 
         declaration.setType(newTypeAnnotation);
@@ -95,10 +95,9 @@ export const convert = (sourceFile: SourceFile) => {
      * - from: React.FC<{ hoge:fuga }>
      * - to: React.FC<{ hoge:fuga; children?: React.ReactNode }>
      */
-    const isTypeLiteral =
-      declaration
-        .getTypeNodeOrThrow()
-        .getFirstChildByKind(SyntaxKind.TypeLiteral) != null;
+    const isTypeLiteral = declaration
+      .getTypeNodeOrThrow()
+      .getFirstChildByKind(SyntaxKind.TypeLiteral) != null;
 
     if (isTypeLiteral) {
       const typeNode = declaration.getTypeNodeOrThrow();
@@ -128,7 +127,8 @@ export const convert = (sourceFile: SourceFile) => {
       const typeNode = declaration.getTypeNodeOrThrow();
       const [genericType] = typeNode.getChildren();
 
-      const newTypeAnnotation = `${genericType.getText()}<{ children?: React.ReactNode }>`;
+      const newTypeAnnotation =
+        `${genericType.getText()}<{ children?: React.ReactNode }>`;
 
       declaration.setType(newTypeAnnotation);
 

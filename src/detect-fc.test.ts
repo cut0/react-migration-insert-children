@@ -47,8 +47,9 @@ Deno.test("Detect FC declaration", () => {
     });
     const source = project.createSourceFile("example.tsx", input);
 
-    const variableDeclartion =
-      source.getVariableDeclarationOrThrow("Component");
+    const variableDeclartion = source.getVariableDeclarationOrThrow(
+      "Component",
+    );
 
     const result = isFcDeclartion(variableDeclartion);
 
@@ -90,8 +91,9 @@ Deno.test("Detect children refered", () => {
     });
     const source = project.createSourceFile("example.tsx", input);
 
-    const variableDeclartion =
-      source.getVariableDeclarationOrThrow("Component");
+    const variableDeclartion = source.getVariableDeclarationOrThrow(
+      "Component",
+    );
 
     const result = isChildrenRefered(variableDeclartion);
 

@@ -76,7 +76,7 @@ const convertTypeLiteral = (typeLiteralNode: TypeLiteralNode | undefined) => {
 };
 
 const convertIntersectionType = (
-  intersectionTypeNode: IntersectionTypeNode | undefined
+  intersectionTypeNode: IntersectionTypeNode | undefined,
 ) => {
   if (intersectionTypeNode == null) {
     return;
@@ -106,13 +106,13 @@ const convertIntersectionType = (
 
 const convertTypeReference = (
   typeReferenceNode: TypeReferenceNode | undefined,
-  propsTypeAlias: TypeAliasDeclaration
+  propsTypeAlias: TypeAliasDeclaration,
 ) => {
   if (typeReferenceNode == null) {
     return;
   }
   propsTypeAlias.setType(
-    `${typeReferenceNode.getText()} & { children?: React.ReactNode }`
+    `${typeReferenceNode.getText()} & { children?: React.ReactNode }`,
   );
   return;
 };
@@ -137,7 +137,7 @@ export const convert = (sourceFile: SourceFile) => {
         .filter(
           (node) =>
             node.getText().startsWith("React.FC") ||
-            node.getText().startsWith("FC")
+            node.getText().startsWith("FC"),
         );
 
       if (intersectionTypeNodes.length > 0) {
@@ -154,7 +154,7 @@ export const convert = (sourceFile: SourceFile) => {
       .find(
         (statement) =>
           statement instanceof TypeAliasDeclaration &&
-          statement.getType() === props
+          statement.getType() === props,
       ) as TypeAliasDeclaration;
 
     /**
@@ -173,7 +173,7 @@ export const convert = (sourceFile: SourceFile) => {
      * - to: type Props = { hoge:fuga; children?: React.ReactNode }
      */
     const typeLiteralNode = propsTypeAlias.getFirstChildByKind(
-      SyntaxKind.TypeLiteral
+      SyntaxKind.TypeLiteral,
     );
     convertTypeLiteral(typeLiteralNode);
 
@@ -183,7 +183,7 @@ export const convert = (sourceFile: SourceFile) => {
      * - to: type Props = Hoge & { hoge:fuga; children?: React.ReactNode }
      */
     const intersectionTypeNode = propsTypeAlias.getFirstChildByKind(
-      SyntaxKind.IntersectionType
+      SyntaxKind.IntersectionType,
     );
     convertIntersectionType(intersectionTypeNode);
 
@@ -193,7 +193,7 @@ export const convert = (sourceFile: SourceFile) => {
      * - to: type Props = Hoge & { children?: React.ReactNode }
      */
     const typeReferenceNode = propsTypeAlias.getFirstChildByKind(
-      SyntaxKind.TypeReference
+      SyntaxKind.TypeReference,
     );
     convertTypeReference(typeReferenceNode, propsTypeAlias);
   });
