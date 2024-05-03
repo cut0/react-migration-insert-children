@@ -1,6 +1,7 @@
 # React Migration Insert Children
 
 After React18, `children: React.Node` was removed from `React.FC`.
+
 This tool is a migration tool that inserts the required children when transitioning from versions earlier than React18 to React18.
 
 ```diff
